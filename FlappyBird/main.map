@@ -1,0 +1,190 @@
+Archive member included because of file (symbol)
+
+C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+                              main.o (__aeabi_idiv)
+C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+                              C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o) (__aeabi_idiv0)
+
+Allocating common symbols
+Common symbol       size              file
+
+Tunnel              0x4               main.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+flash            0x00000000         0x00008000
+ram              0x10000000         0x00002000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD init.o
+LOAD main.o
+LOAD C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a
+                0x00000000                . = ORIGIN (flash)
+
+.text           0x00000000      0x7ac
+ *(.vectors)
+ .vectors       0x00000000       0xc0 init.o
+                0x00000000                Vectors
+ *(.text)
+ .text          0x000000c0       0xcc init.o
+                0x000000c0                clock_init
+                0x0000010c                init
+                0x00000184                Default_Handler
+ .text          0x0000018c      0x55c main.o
+                0x0000018c                SysTick
+                0x000001cc                initSysTick
+                0x00000200                delay
+                0x0000021c                prbs
+                0x00000294                ConfigPins
+                0x000002f8                initUART
+                0x000003ac                eputc
+                0x000003dc                egetc
+                0x00000404                printString
+                0x0000042c                HexDigit
+                0x0000046c                printInteger
+                0x000004c8                updateScreen
+                0x000005d0                ReadADC
+                0x00000608                main
+ .text          0x000006e8       0xc0 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+                0x000006e8                __divsi3
+                0x000006e8                __aeabi_idiv
+                0x00000794                __aeabi_idivmod
+ .text          0x000007a8        0x4 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+                0x000007a8                __aeabi_idiv0
+                0x000007a8                __aeabi_ldiv0
+
+.glue_7         0x000007ac        0x0
+ .glue_7        0x00000000        0x0 linker stubs
+
+.glue_7t        0x000007ac        0x0
+ .glue_7t       0x00000000        0x0 linker stubs
+
+.vfp11_veneer   0x000007ac        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x000007ac        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x000007ac        0x0
+ .iplt          0x00000000        0x0 init.o
+
+.rel.dyn        0x000007ac        0x0
+ .rel.iplt      0x00000000        0x0 init.o
+
+.rodata         0x000007ac       0x84
+ .rodata        0x000007ac       0x84 main.o
+                0x10000000                . = ORIGIN (ram)
+
+.data           0x10000000        0xc load address 0x00000830
+                0x00000830                INIT_DATA_VALUES = LOADADDR (.data)
+                0x10000000                INIT_DATA_START = .
+ *(.data)
+ .data          0x10000000        0x0 init.o
+ .data          0x10000000        0xc main.o
+                0x10000000                Width
+                0x10000004                Health
+ .data          0x1000000c        0x0 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+ .data          0x1000000c        0x0 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+                0x1000000c                INIT_DATA_END = .
+                0x1000000c                BSS_START = .
+
+.igot.plt       0x1000000c        0x0 load address 0x0000083c
+ .igot.plt      0x00000000        0x0 init.o
+
+.bss            0x1000000c        0xc load address 0x0000083c
+ *(.bss)
+ .bss           0x1000000c        0x0 init.o
+ .bss           0x1000000c        0x8 main.o
+ .bss           0x10000014        0x0 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+ .bss           0x10000014        0x0 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+ COMMON         0x10000014        0x4 main.o
+                0x10000014                Tunnel
+                0x10000018                BSS_END = .
+OUTPUT(main.elf elf32-littlearm)
+
+.debug_info     0x00000000      0x3a0
+ .debug_info    0x00000000      0x116 init.o
+ .debug_info    0x00000116      0x28a main.o
+
+.debug_abbrev   0x00000000      0x22a
+ .debug_abbrev  0x00000000       0xe8 init.o
+ .debug_abbrev  0x000000e8      0x142 main.o
+
+.debug_aranges  0x00000000       0x40
+ .debug_aranges
+                0x00000000       0x20 init.o
+ .debug_aranges
+                0x00000020       0x20 main.o
+
+.debug_line     0x00000000      0x15b
+ .debug_line    0x00000000       0x5b init.o
+ .debug_line    0x0000005b      0x100 main.o
+
+.debug_str      0x00000000      0x23e
+ .debug_str     0x00000000      0x141 init.o
+                                0x153 (size before relaxing)
+ .debug_str     0x00000141       0xfd main.o
+                                0x190 (size before relaxing)
+
+.comment        0x00000000       0x70
+ .comment       0x00000000       0x70 init.o
+                                 0x71 (size before relaxing)
+ .comment       0x00000000       0x71 main.o
+
+.ARM.attributes
+                0x00000000       0x31
+ .ARM.attributes
+                0x00000000       0x31 init.o
+ .ARM.attributes
+                0x00000031       0x31 main.o
+ .ARM.attributes
+                0x00000062       0x1e C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+ .ARM.attributes
+                0x00000080       0x1e C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+
+.debug_frame    0x00000000      0x240
+ .debug_frame   0x00000000       0x68 init.o
+ .debug_frame   0x00000068      0x1b8 main.o
+ .debug_frame   0x00000220       0x20 C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+
+Cross Reference Table
+
+Symbol                                            File
+BSS_END                                           init.o
+BSS_START                                         init.o
+ConfigPins                                        main.o
+Default_Handler                                   init.o
+Health                                            main.o
+HexDigit                                          main.o
+INIT_DATA_END                                     init.o
+INIT_DATA_START                                   init.o
+INIT_DATA_VALUES                                  init.o
+ReadADC                                           main.o
+SysTick                                           main.o
+                                                  init.o
+Tunnel                                            main.o
+Vectors                                           init.o
+Width                                             main.o
+__aeabi_idiv                                      C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+                                                  main.o
+__aeabi_idiv0                                     C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+                                                  C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+__aeabi_idivmod                                   C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+__aeabi_ldiv0                                     C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_dvmd_tls.o)
+__divsi3                                          C:\Program Files\arm_sdk\lib\gcc\arm-none-eabi\4.8.3\armv6-m\libgcc.a(_divsi3.o)
+clock_init                                        init.o
+delay                                             main.o
+egetc                                             main.o
+eputc                                             main.o
+init                                              init.o
+initSysTick                                       main.o
+initUART                                          main.o
+main                                              main.o
+                                                  init.o
+prbs                                              main.o
+printInteger                                      main.o
+printString                                       main.o
+updateScreen                                      main.o

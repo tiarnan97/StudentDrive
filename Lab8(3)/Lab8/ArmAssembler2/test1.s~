@@ -1,0 +1,69 @@
+; This program adds together all of the elements in an array
+; and stores the total in the memory location whose address is
+; identified by the symbol Sum
+; The program in C would look like this:
+; #define ARY_LEN 5
+; const int Ary1[]={1,2,3,4,5};
+; int *AryPtr;
+; int Sum;
+; int Count;
+; void main()
+; {
+; 	Count = 0;
+;	Sum = 0;
+;	AryPtr = Ary1;
+; 	while (Count < ARY_LEN)
+;	{
+;		Sum = Sum+*AryPtr;
+;		AryPtr++;
+;		Count++;
+;	}
+; }
+; In the code that follows 
+; Count is mapped to register R0
+; AryPtr is mapped to register R1
+; Sum is mapped to register R2 (and eventually written out to RAM)
+
+	AREA DATA
+; define the array length (similar to #define in C)
+ARY_LEN EQU 5 
+
+Sum   DCD 0
+Stack  SPACE 0x100 	; allocate some space for the stack
+	
+	; The following symols are in the CODE section (ROM,Executable (Thumb), readonly)	
+	AREA THUMB,CODE,READONLY
+	; EXPORTED Symbols can be linked against	
+		EXPORT Reset_Handler
+		EXPORT __Vectors
+	; Minimal interrupt vector table follows
+	; First entry is initial stack pointer (end of stack)
+	; second entry is the address of the reset handler
+__Vectors
+		DCD Stack+0x100		
+		DCD Reset_Handler 
+
+; Define const data
+Ary1  DCD 1,2,3,4,5
+
+	; 'Main' program goes here
+Reset_Handler
+		
+		MOVS R0,#0		; Count = 0;
+		MOVS R2,#0		; Sum = 0;
+		LDR R1,=Ary1	; AryPtr = Ary1;
+WhileLoop				
+		CMP R0,#ARY_LEN	; Count < ARY_LEN?
+		BLT EndOfWhileLoop 
+; opening '{' of while loop
+		LDR R3,[R1]		; fetch next array element
+		ADDS R2,R2,R3   ; Sum = Sum + *AryPtr;
+		ADDS R1,R1,#4	; AryPtr++;
+		ADDS R0,#1		; Count++;
+		B WhileLoop		; Go back to top of loop
+EndOfWhileLoop			; closing '{' of while loop
+		LDR R0,=Sum
+		STR R2,[R0]		; Write Sum out to memory
+		
+stop	B stop		
+	end

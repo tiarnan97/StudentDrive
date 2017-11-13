@@ -1,0 +1,100 @@
+Product: MDK-ARM Lite 5.10
+Component: ARM Compiler 5.04 update 1 (build 49)
+Tool: armlink [5040049]
+
+==============================================================================
+
+Section Cross References
+
+    test1.o(THUMB) refers to test1.o(DATA) for Stack
+
+
+==============================================================================
+
+Image Symbol Table
+
+    Local Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    THUMB                                    0x00000000   Section       64  test1.o(THUMB)
+    test1.s                                  0x00000000   Number         0  test1.o ABSOLUTE
+    Ary1                                     0x00000008   Data          20  test1.o(THUMB)
+    DATA                                     0x20000000   Section      260  test1.o(DATA)
+    Sum                                      0x20000000   Data           4  test1.o(DATA)
+    Stack                                    0x20000004   Data         256  test1.o(DATA)
+
+    Global Symbols
+
+    Symbol Name                              Value     Ov Type        Size  Object(Section)
+
+    BuildAttributes$$THM_ISAv3M$S$PE$A:L22$X:L11$S22$IEEE1$IW$USESV6$~STKCKD$USESV7$~SHL$OSPACE$EBA8$STANDARDLIB$PRES8$EABIv2 0x00000000   Number         0  anon$$obj.o ABSOLUTE
+    __Vectors                                0x00000000   Data           0  test1.o(THUMB)
+    Reset_Handler                            0x0000001d   Thumb Code     0  test1.o(THUMB)
+
+
+
+==============================================================================
+
+Memory Map of the image
+
+  Image Entry point : 0x0000001d
+
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00000144, Max: 0xffffffff, ABSOLUTE)
+
+    Execution Region ER_RO (Base: 0x00000000, Size: 0x00000040, Max: 0xffffffff, ABSOLUTE)
+
+    Base Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x00000000   0x00000040   Code   RO            2  * THUMB               test1.o
+
+
+    Execution Region ER_RW (Base: 0x20000000, Size: 0x00000104, Max: 0xffffffff, ABSOLUTE)
+
+    Base Addr    Size         Type   Attr      Idx    E Section Name        Object
+
+    0x20000000   0x00000104   Data   RW            1    DATA                test1.o
+
+
+    Execution Region ER_ZI (Base: 0x20000104, Size: 0x00000000, Max: 0xffffffff, ABSOLUTE)
+
+    **** No section assigned to this execution region ****
+
+
+==============================================================================
+
+Image component sizes
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
+
+        64         38          0        260          0        236   test1.o
+
+    ----------------------------------------------------------------------
+        64         38          0        260          0        236   Object Totals
+         0          0          0          0          0          0   (incl. Generated)
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+         0          0          0          0          0          0   Library Totals
+         0          0          0          0          0          0   (incl. Padding)
+
+    ----------------------------------------------------------------------
+
+==============================================================================
+
+
+      Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
+
+        64         38          0        260          0        236   Grand Totals
+        64         38          0        260          0        236   ELF Image Totals
+        64         38          0        260          0          0   ROM Totals
+
+==============================================================================
+
+    Total RO  Size (Code + RO Data)                   64 (   0.06kB)
+    Total RW  Size (RW Data + ZI Data)               260 (   0.25kB)
+    Total ROM Size (Code + RO Data + RW Data)        324 (   0.32kB)
+
+==============================================================================
+

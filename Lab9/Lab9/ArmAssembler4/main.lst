@@ -1,0 +1,282 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; This program demonstrates the use of
+    2 00000000         ; subroutines
+    3 00000000                 AREA             DATA
+    4 00000000         
+    5 00000000 00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00    TargetString
+                               SPACE            20
+    6 00000014         
+    7 00000014         ; The following symols are in the CODE section (ROM,Exec
+                       utable (Thumb), readonly) 
+    8 00000014                 AREA             THUMB,CODE,READONLY
+    9 00000000         ; EXPORTED Symbols can be linked against 
+   10 00000000                 EXPORT           Reset_Handler
+   11 00000000                 EXPORT           __Vectors
+   12 00000000         ; Minimal interrupt vector table follows
+   13 00000000         ; First entry is initial stack pointer (end of stack)
+   14 00000000         ; second entry is the address of the reset handler
+   15 00000000         __Vectors
+   16 00000000 20001000        DCD              0x20001000
+   17 00000004 00000000        DCD              Reset_Handler
+   18 00000008         ; 'Main' program goes here
+   19 00000008         Reset_Handler
+   20 00000008         
+   21 00000008 200C            MOVS             R0,#12
+   22 0000000A F000 F808       BL               square
+   23 0000000E 4916            LDR              R1,=TestString
+   24 00000010 F000 F808       BL               strlen
+   25 00000014 4915            LDR              R1,=TargetString
+   26 00000016 4A14            LDR              R2,=TestString
+   27 00000018 F000 F812       BL               strncpy
+   28 0000001C E7FE    stop    B                stop
+   29 0000001E         ; functions
+   30 0000001E         ; int square(int)
+   31 0000001E         ; This function takes a single argument in R0,
+   32 0000001E         ; squares it and returns to the caller
+   33 0000001E         ; parameter is passed via R0 and result is returned
+   34 0000001E         ; in R0
+   35 0000001E         square
+   36 0000001E B500            push             {LR}
+   37 00000020 4340            muls             R0,R0,R0
+   38 00000022 BD00            pop              {PC}
+   39 00000024         ; int strlen(char *str)
+   40 00000024         ; This function takes a single argument: a pointer
+   41 00000024         ; to a string in R1.  It searches through the
+   42 00000024         ; string looking for a terminating null, counting
+   43 00000024         ; as it goes.  This count is returned as the
+   44 00000024         ; length of the string to the caller via R0.
+   45 00000024         ;
+   46 00000024         strlen
+   47 00000024 B500            push             {LR}        ; save any register
+                                                            s that are
+   48 00000026 B402            push             {R1}
+   49 00000028 B404            push             {R2}        ; changed (apart fr
+                                                            om R0)
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   50 0000002A 2000            MOVS             R0,#0       ; zero the counter
+   51 0000002C 2200            MOVS             R2,#0       ; clear out R2
+   52 0000002E         strlen_loop
+   53 0000002E 780A            LDRB             R2,[R1]     ; read a character
+   54 00000030 2A00            CMP              R2,#0       ;
+   55 00000032 D002            BEQ              strlen_exit
+   56 00000034 1C40            ADDS             R0,R0,#1    ; increment count
+   57 00000036 1C49            ADDS             R1,R1,#1    ; increment pointer
+                                                            
+   58 00000038 E7F9            B                strlen_loop ; back to top of lo
+                                                            op
+   59 0000003A         strlen_exit
+   60 0000003A BC04            pop              {R2}
+   61 0000003C BC02            pop              {R1}
+   62 0000003E BD00            pop              {PC}
+   63 00000040         
+   64 00000040         ; int strcpy(char *dst, char *src)
+   65 00000040         ; This function takes two arguments:
+   66 00000040         ; a source string (src) and a destination
+   67 00000040         ; string (dst).  The function copies the 
+   68 00000040         ; contents of src to dst.  All bytes
+   69 00000040         ; up to and including the terminating
+   70 00000040         ; null (hopefully present) will be copied
+   71 00000040         ; On entry R1 points to the destination string
+   72 00000040         ; R2 points to the source string.  On 
+   73 00000040         ; exit R0 contains a count of the bytes copied
+   74 00000040         strncpy
+   75 00000040 B50E            push             {LR,R1-R3}
+   76 00000042         
+   77 00000042 2000            movs             R0,#0       ; zero the count
+   78 00000044 2300            movs             R3,#0       ; clear out R3
+   79 00000046         
+   80 00000046         strcpy
+   81 00000046 B50E            push             {LR,R1-R3}
+   82 00000048         
+   83 00000048 2000            movs             R0,#0       ; zero the count
+   84 0000004A 2300            movs             R3,#0       ; clear out R3
+   85 0000004C         
+   86 0000004C         strncpy_loop
+   87 0000004C 7813            ldrb             R3,[R2]     ; read byte
+   88 0000004E 700B            strb             R3,[R1]     ; write byte
+   89 00000050 1C40            adds             R0,R0,#1    ; increment count
+   90 00000052 3101            adds             R1,#1       ; increment dst
+   91 00000054 3201            adds             R2,#1       ; increment src
+   92 00000056 2B00            cmp              R3,#0       ; at the end
+   93 00000058 D000            beq              strncpy_exit ; if so, exit
+   94 0000005A E7F7            b                strncpy_loop ; else go back
+   95 0000005C         strncpy_exit
+   96 0000005C BD0E            pop              {PC,R1-R3}
+   97 0000005E 61 62 63 
+              64 65 66 
+              00       TestString
+                               DCB              "abcdef",0
+   98 00000065                 end
+              00 00 00 
+              00000000 
+              00000000 
+              00000000 
+Command Line: --debug --xref --cpu=Cortex-M0 --apcs=interwork --depend=.\main.d
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+ -o.\main.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\CMS
+IS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\Device\Include --predefine="__
+EVAL SETA 1" --list=.\main.lst main.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DATA 00000000
+
+Symbol: DATA
+   Definitions
+      At line 3 in file main.s
+   Uses
+      None
+Comment: DATA unused
+TargetString 00000000
+
+Symbol: TargetString
+   Definitions
+      At line 5 in file main.s
+   Uses
+      At line 25 in file main.s
+Comment: TargetString used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Reset_Handler 00000008
+
+Symbol: Reset_Handler
+   Definitions
+      At line 19 in file main.s
+   Uses
+      At line 10 in file main.s
+      At line 17 in file main.s
+
+THUMB 00000000
+
+Symbol: THUMB
+   Definitions
+      At line 8 in file main.s
+   Uses
+      None
+Comment: THUMB unused
+TestString 0000005E
+
+Symbol: TestString
+   Definitions
+      At line 97 in file main.s
+   Uses
+      At line 23 in file main.s
+      At line 26 in file main.s
+
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 15 in file main.s
+   Uses
+      At line 11 in file main.s
+Comment: __Vectors used once
+square 0000001E
+
+Symbol: square
+   Definitions
+      At line 35 in file main.s
+   Uses
+      At line 22 in file main.s
+Comment: square used once
+stop 0000001C
+
+Symbol: stop
+   Definitions
+      At line 28 in file main.s
+   Uses
+      At line 28 in file main.s
+Comment: stop used once
+strcpy 00000046
+
+Symbol: strcpy
+   Definitions
+      At line 80 in file main.s
+   Uses
+      None
+Comment: strcpy unused
+strlen 00000024
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: strlen
+   Definitions
+      At line 46 in file main.s
+   Uses
+      At line 24 in file main.s
+Comment: strlen used once
+strlen_exit 0000003A
+
+Symbol: strlen_exit
+   Definitions
+      At line 59 in file main.s
+   Uses
+      At line 55 in file main.s
+Comment: strlen_exit used once
+strlen_loop 0000002E
+
+Symbol: strlen_loop
+   Definitions
+      At line 52 in file main.s
+   Uses
+      At line 58 in file main.s
+Comment: strlen_loop used once
+strncpy 00000040
+
+Symbol: strncpy
+   Definitions
+      At line 74 in file main.s
+   Uses
+      At line 27 in file main.s
+Comment: strncpy used once
+strncpy_exit 0000005C
+
+Symbol: strncpy_exit
+   Definitions
+      At line 95 in file main.s
+   Uses
+      At line 93 in file main.s
+Comment: strncpy_exit used once
+strncpy_loop 0000004C
+
+Symbol: strncpy_loop
+   Definitions
+      At line 86 in file main.s
+   Uses
+      At line 94 in file main.s
+Comment: strncpy_loop used once
+13 symbols
+348 symbols in table

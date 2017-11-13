@@ -1,0 +1,305 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; This program adds together all of the elements in an a
+                       rray
+    2 00000000         ; and stores the total in the memory location whose addr
+                       ess is
+    3 00000000         ; identified by the symbol Sum
+    4 00000000         ; The program in C would look like this:
+    5 00000000         ; #define ARY_LEN 5
+    6 00000000         ; const int Ary1[]={1,2,3,4,5};
+    7 00000000         ; int *AryPtr;
+    8 00000000         ; int Sum;
+    9 00000000         ; int Count;
+   10 00000000         ; void main()
+   11 00000000         ; {
+   12 00000000         ;  Count = 0;
+   13 00000000         ; Sum = 0;
+   14 00000000         ; AryPtr = Ary1;
+   15 00000000         ;  while (Count < ARY_LEN)
+   16 00000000         ; {
+   17 00000000         ;  Sum = Sum+*AryPtr;
+   18 00000000         ;  AryPtr++;
+   19 00000000         ;  Count++;
+   20 00000000         ; }
+   21 00000000         ; }
+   22 00000000         ; In the code that follows 
+   23 00000000         ; Count is mapped to register R0
+   24 00000000         ; AryPtr is mapped to register R1
+   25 00000000         ; Sum is mapped to register R2 (and eventually written o
+                       ut to RAM)
+   26 00000000         
+   27 00000000                 AREA             DATA
+   28 00000000         ; define the array length (similar to #define in C)
+   29 00000000 00000005 
+                       ARY_LEN EQU              5
+   30 00000000         
+   31 00000000 00000000 
+                       Sum     DCD              0
+   32 00000004 00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00       Stack   SPACE            0x100       ; allocate some spa
+                                                            ce for the stack
+   33 00000104         
+   34 00000104         ; The following symols are in the CODE section (ROM,Exec
+                       utable (Thumb), readonly) 
+   35 00000104                 AREA             THUMB,CODE,READONLY
+   36 00000000         ; EXPORTED Symbols can be linked against 
+   37 00000000                 EXPORT           Reset_Handler
+   38 00000000                 EXPORT           __Vectors
+   39 00000000         ; Minimal interrupt vector table follows
+   40 00000000         ; First entry is initial stack pointer (end of stack)
+   41 00000000         ; second entry is the address of the reset handler
+   42 00000000         __Vectors
+   43 00000000 00000100        DCD              Stack+0x100
+   44 00000004 00000000        DCD              Reset_Handler
+   45 00000008         
+   46 00000008         ; Define const data
+   47 00000008 00000001 
+              00000002 
+              00000003 
+              00000004 
+              00000005 Ary1    DCD              1,2,3,4,5
+   48 0000001C         
+   49 0000001C         ; 'Main' program goes here
+   50 0000001C         Reset_Handler
+   51 0000001C         
+   52 0000001C 2000            MOVS             R0,#0       ; Count = 0;
+   53 0000001E 2200            MOVS             R2,#0       ; Sum = 0;
+   54 00000020 4905            LDR              R1,=Ary1    ; AryPtr = Ary1;
+   55 00000022         WhileLoop
+   56 00000022 2805            CMP              R0,#ARY_LEN ; Count < ARY_LEN?
+   57 00000024 DA04            BGE              EndOfWhileLoop
+   58 00000026         ; opening '{' of while loop
+   59 00000026 680B            LDR              R3,[R1]     ; fetch next array 
+                                                            element
+   60 00000028 18D2            ADDS             R2,R2,R3    ; Sum = Sum + *AryP
+                                                            tr;
+   61 0000002A 1D09            ADDS             R1,R1,#4    ; AryPtr++;
+   62 0000002C 3801            SUBS             R0,#1       ; Count++;
+   63 0000002E E7F8            B                WhileLoop   ; Go back to top of
+                                                             loop
+   64 00000030         EndOfWhileLoop                       ; closing '{' of wh
+                                                            ile loop
+   65 00000030 4802            LDR              R0,=Sum
+   66 00000032 6002            STR              R2,[R0]     ; Write Sum out to 
+                                                            memory
+   67 00000034         
+   68 00000034 E7FE    stop    B                stop
+   69 00000036                 end
+              00 00 00000000 
+              00000000 
+Command Line: --debug --xref --cpu=Cortex-M0 --apcs=interwork --depend=.\test1.
+d -o.\test1.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\C
+MSIS\Include -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\4.1.0\Device\Include --predefine="
+__EVAL SETA 1" --list=.\test1.lst test1.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DATA 00000000
+
+Symbol: DATA
+   Definitions
+      At line 27 in file test1.s
+   Uses
+      None
+Comment: DATA unused
+Stack 00000004
+
+Symbol: Stack
+   Definitions
+      At line 32 in file test1.s
+   Uses
+      At line 43 in file test1.s
+Comment: Stack used once
+Sum 00000000
+
+Symbol: Sum
+   Definitions
+      At line 31 in file test1.s
+   Uses
+      At line 65 in file test1.s
+Comment: Sum used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Ary1 00000008
+
+Symbol: Ary1
+   Definitions
+      At line 47 in file test1.s
+   Uses
+      At line 54 in file test1.s
+Comment: Ary1 used once
+EndOfWhileLoop 00000030
+
+Symbol: EndOfWhileLoop
+   Definitions
+      At line 64 in file test1.s
+   Uses
+      At line 57 in file test1.s
+Comment: EndOfWhileLoop used once
+Reset_Handler 0000001C
+
+Symbol: Reset_Handler
+   Definitions
+      At line 50 in file test1.s
+   Uses
+      At line 37 in file test1.s
+      At line 44 in file test1.s
+
+THUMB 00000000
+
+Symbol: THUMB
+   Definitions
+      At line 35 in file test1.s
+   Uses
+      None
+Comment: THUMB unused
+WhileLoop 00000022
+
+Symbol: WhileLoop
+   Definitions
+      At line 55 in file test1.s
+   Uses
+      At line 63 in file test1.s
+Comment: WhileLoop used once
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 42 in file test1.s
+   Uses
+      At line 38 in file test1.s
+Comment: __Vectors used once
+stop 00000034
+
+Symbol: stop
+   Definitions
+      At line 68 in file test1.s
+   Uses
+      At line 68 in file test1.s
+Comment: stop used once
+7 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+ARY_LEN 00000005
+
+Symbol: ARY_LEN
+   Definitions
+      At line 29 in file test1.s
+   Uses
+      At line 56 in file test1.s
+Comment: ARY_LEN used once
+1 symbol
+344 symbols in table
